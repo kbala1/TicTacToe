@@ -1,0 +1,30 @@
+body{
+    background: beige;
+
+}
+.grid-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 30vh;
+    width: 30vh;
+    margin: auto;
+    position: relative;
+
+}
+.grid-item{
+    color: darkgray;
+
+}
+h1 {
+    font-color: red;
+    text-align: center;
+}
+.message{
+    font-size: 20px;
+    text-align: center;
+    margin: auto;
+    position: relative;
+}
+
+
