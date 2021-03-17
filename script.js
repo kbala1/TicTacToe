@@ -45,7 +45,7 @@ let gridItems = document.getElementsByClassName("grid-item");
 // when a box inside the grid is clicked:
 // if it is on (i.e. has no value x or o inside of it)
 for(let i = 0; i < gridItems.length; i++) {
-    gridItems.addEventListener("click", (event) => {
+    gridItems[i].addEventListener("click", (event) => {
         console.log("button clicked");
         isCellClickable(i);
 
