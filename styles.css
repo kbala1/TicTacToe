@@ -3,6 +3,15 @@ body{
     margin: 50px;
 
 }
+.image{
+    display: inline-flex;
+    width:
+
+}
+main{
+    display: flow;
+
+}
 
 .grid-container{
     display: grid;
@@ -27,11 +36,11 @@ body{
 
 }
 h1 {
-    color: blue;
+    color: brown;
     text-align: center;
     padding-bottom: 20px;
     font-size: 50px;
-    font-family: "Gurmukhi MN";
+    font-family: "American Typewriter"
 }
 .message{
     display: flex;
@@ -41,7 +50,6 @@ h1 {
     margin: auto;
     position: relative;
     padding-top: 20px;
-    margin-top: 20px;
     font-size: 40px;
 }
 h2{
@@ -65,10 +73,12 @@ h2{
 .score{
     display: block;
     text-align: left;
-    font-family: "Academy Engraved LET";
+    font-family: "Arial Rounded MT Bold";
     justify-content: start;
     padding: 10px;
 }
+
+
 
 
 @media only screen and (max-width:800px) {
