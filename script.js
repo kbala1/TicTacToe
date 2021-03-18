@@ -81,8 +81,12 @@ class Grid {
             if ( (this.cells[winningOutcome[0]].value !== "") &&
                 (this.hasSameValue(this.cells[winningOutcome[0]], this.cells[winningOutcome[1]], this.cells[winningOutcome[2]]))) {
                 return this.cells[winningOutcome[0]].value;
+                // TODO: return object, not string
+                //  {winner: this.cells[winningOutcome[0]].value, winningPositions: winningOutcome}
             }
         }
+
+
 
         if (this.movesSoFar === 9) {
             // if checked all combinations and board is full, no one won
@@ -118,6 +122,7 @@ for(let i = 0; i < gridItems.length; i++) {
     let htmlCell = gridItems[i];
     let jsCell = grid.cells[i];
     htmlCell.addEventListener("click", (event) => {
+        //event.preventDefault();
         console.log("button clicked");
         if(!jsCell.isClickable){
             alert("Click on non-occupied box.");
@@ -139,12 +144,17 @@ for(let i = 0; i < gridItems.length; i++) {
                 // message display for winner or draw
                 //and rest cells make not clickable and game end;
                 if(result === "X") {
-                    playerX.score ++;
+                    playerX.score += 1;
                     text.innerText = "PlayerX won the game.";
+                    document.getElementById("px").innerText = `Score: ${playerX.score}`;
+                    //to check weather kitty comes or not
+                    //callKitty();
                 }
                 else if(result === "O"){
-                    playerO.score ++
+                    playerO.score += 1;
                     text.innerText = "PlayerO won the game.";
+                    document.getElementById("po").innerText = `Score: ${playerO.score}`;
+
                 }
                 else {
                     text.innerText = "It's a draw.";
@@ -161,6 +171,19 @@ function switchTurn() {
     currentPlayer = (currentPlayer === playerX) ?  playerO :  playerX;
     text.innerText = `Player${currentPlayer.symbol}, make your move now.`;
 }
+// when someone wins kitty will appear on grid
+// function callKitty() {
+//     const catRandomEndpoint = 'https://api.thecatapi.com/v1/images/search';
+//     const getRandomButton = document.querySelector("#randomButton");
+//     fetch(catRandomEndpoint)
+//         .then(response => response.json())
+//         .then((json => {
+//             let catUrl = json[0].url;
+//             //let imageTag = document.querySelector("#randomCatImage");
+//             gridItems.setAttribute("src", catUrl);
+//         }))
+//         .catch(err => console.log(err);
+// }
 
 
 let reset = document.querySelector("#reset");
