@@ -4,13 +4,9 @@ body{
 
 }
 .image{
-    display: inline-flex;
-    width:
-
-}
-main{
-    display: flow;
-
+    display: grid;
+    width: 100px;
+    height: 100px;
 }
 
 .grid-container{
@@ -23,6 +19,19 @@ main{
     position: relative;
 
 }
+
+main {
+    display: flex;
+    flex-direction: row;
+}
+
+img {
+    line-height: normal;
+    left: 10px;
+    max-height: 300px;
+    max-width: 300px;
+}
+
 .grid-item{
 
     text-decoration-color: burlywood;

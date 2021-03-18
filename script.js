@@ -1,7 +1,22 @@
-console.log("file attached");
+
 let buttonStatus = "";
 let text = document.querySelector("h2");
 
+//Player Class
+
+class Player{
+    constructor(symbol) {
+        this.symbol = symbol;
+        this.score = 0;
+    }
+}
+
+// --------------------------
+let playerX = new Player("X");
+let playerO = new Player ("O");
+let currentPlayer = playerX;
+
+//GridCell Class
 
 class GridCell {
     constructor(){
@@ -22,15 +37,6 @@ class GridCell {
         this.value = "";
         this.isClickable = true;
     }
-
-    // compare function
-    shouldGameEnd() {
-        // if player wins
-        //break;
-        // if draw
-        //break ;
-    }
-
 }
 
 class Grid {
@@ -101,22 +107,9 @@ class Grid {
     }
 }
 
-//Player Class
-class Player{
-    constructor(symbol) {
-        this.symbol = symbol;
-        this.score = 0;
-    }
-}
-
-// --------------------------
-let playerX = new Player("X");
-let playerO = new Player ("O");
-let currentPlayer = playerX;
-
-
 let grid  = new Grid();
 let gridItems = document.getElementsByClassName("grid-item");
+let gameEnded = false;
 // add event listener to each box in the grid
 // when a box inside the grid is clicked:
 // if it is on (i.e. has no value x or o inside of it)
@@ -127,7 +120,9 @@ for(let i = 0; i < gridItems.length; i++) {
         //event.preventDefault();
         console.log("button clicked");
         if(!jsCell.isClickable){
-            alert("Click on non-occupied box.");
+            if (!gameEnded) {
+                alert("Click on non-occupied box.");
+            }
         }
         else {
             htmlCell.innerText = currentPlayer.symbol;
@@ -146,27 +141,25 @@ for(let i = 0; i < gridItems.length; i++) {
                 // message display for winner or draw
                 //and rest cells make not clickable and game end;
                 console.log(result.winningPositions)
-                if(result.winner === "X") {
-                    playerX.score += 1;
-                    text.innerText = "PlayerX won the game.";
-                    document.getElementById("px").innerText = `Score: ${playerX.score}`;
-                    // let winningPositions = result.winningPositions;
-                    // winningPositions.forEach(position => position.style.background = "red");
-                    // console.log(winningPositions)
-                    //to check whether kitty comes or not
-                    callKitty();
-                }
-                else if(result.winner === "O"){
-                    playerO.score += 1;
-                    text.innerText = "PlayerO won the game.";
-                    document.getElementById("po").innerText = `Score: ${playerO.score}`;
-                    callKitty();
-
-                }
-                else {
+                if (result.winner === "draw") {
                     text.innerText = "It's a draw.";
-                }
+                } else {
+                    if(result.winner === "X") {
+                        playerX.score += 1;
+                        document.getElementById("px").innerText = `Score: ${playerX.score}`;
+                    }
+                    else if(result.winner === "O"){
+                        playerO.score += 1;
+                        text.innerText = "PlayerO won the game.";
+                        document.getElementById("po").innerText = `Score: ${playerO.score}`;
+                    }
+                    let winningPositions = result.winningPositions;
+                    winningPositions.forEach(position => gridItems[position].style.background = "red");
+                    text.innerText = `Player${result.winner} won the game.`;
+                    callKitty();
+                };
                 grid.makeNotClickable();
+                gameEnded = true;
             }
 
         }
@@ -204,9 +197,11 @@ reset.addEventListener("click", (event) => {
     imageTag.removeAttribute("src");
     for (let i = 0; i < gridItems.length; i++){
         gridItems[i].innerText = "";
+        gridItems[i].style.background = "";
     }
     text.innerText = `Player${currentPlayer.symbol}, make your move now.`;
     currentPlayer = playerX;
+    gameEnded = false;
 });
 
 
