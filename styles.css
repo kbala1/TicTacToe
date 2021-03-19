@@ -8,7 +8,6 @@ body{
     width: 100px;
     height: 100px;
 }
-
 .grid-container{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -17,59 +16,51 @@ body{
     width: 40vh;
     margin: auto;
     position: relative;
-
 }
-
 main {
     display: flex;
     flex-direction: row;
 }
-
 img {
     line-height: normal;
     left: 10px;
-    max-height: 300px;
-    max-width: 300px;
+    max-height: 40vh;
+    max-width: 40vh;
+    min-height: 40vh;
+    min-width: 40vh;
 }
-
 .grid-item{
-
     text-decoration-color: burlywood;
-    font-size: 80px;
     font-family: "Apple LiSung";
-
-}
-.header1{
-    display: block;
-    align-items: center;
-
+    font-size: 80px;
 }
 h1 {
     color: brown;
     text-align: center;
-    padding-bottom: 20px;
-    font-size: 50px;
-    font-family: "American Typewriter"
+    padding-bottom: 10px;
+    font-size: 60px;
+    font-family: "American Typewriter";
+    margin: 5px;
 }
-.message{
+.scoreboard{
     display: flex;
+    flex-direction: row;
     justify-content: space-around;
-    text-align: center;
-    align-items: baseline;
     margin: auto;
     position: relative;
-    padding-top: 20px;
     font-size: 40px;
+    align-items: baseline;
 }
 h2{
     font-size: 30px;
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     padding-top: 20px;
+    margin: 5px;
+    font-family: "Apple LiSung";
 }
 #reset
 {
-
     font-size: 24px;
     text-align: center;
     text-decoration: none;
@@ -82,28 +73,27 @@ h2{
 .score{
     display: block;
     text-align: left;
-    font-family: "Arial Rounded MT Bold";
+    font-family: "American Typewriter";
     justify-content: start;
     padding: 10px;
+    height: 80px;
 }
-
-
-
+.score p, .score label {
+    margin: 10px;
+}
 
 @media only screen and (max-width:800px) {
     /* For tablets: */
     .main {
-        width: 80%;
+        flex-wrap: wrap;
         padding: 0;
-    }
-    .right {
-        width: 100%;
     }
 }
 @media only screen and (max-width:500px) {
     /* For mobile phones: */
-    .menu, .main, .right {
-        width: 100%;
+    .main {
+        flex-wrap: wrap;
     }
+    .image:first-child { flex-basis: 100%; }
 }
 

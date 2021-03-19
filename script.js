@@ -1,9 +1,5 @@
-
-let buttonStatus = "";
-let text = document.querySelector("h2");
-
+/** TicTacToe classes **/
 //Player Class
-
 class Player{
     constructor(symbol) {
         this.symbol = symbol;
@@ -11,13 +7,7 @@ class Player{
     }
 }
 
-// --------------------------
-let playerX = new Player("X");
-let playerO = new Player ("O");
-let currentPlayer = playerX;
-
-//GridCell Class
-
+// GridCell class
 class GridCell {
     constructor(){
         this.value = "";
@@ -29,7 +19,6 @@ class GridCell {
     }
 
     setValue(value){
-        // TODO: maybe check if value already exists
         this.value = value;
     }
 
@@ -39,16 +28,18 @@ class GridCell {
     }
 }
 
+// Grid class
 class Grid {
-
     constructor() {
         this.cells = [];
         this.movesSoFar = 0;
-        for( let i = 0; i < 9; i++) {
+        for(let i = 0; i < 9; i++) {
             let cell = new GridCell();
             this.cells.push(cell);
         }
 
+        // this represents the 8 different cell combinations
+        // with which a player could win
         this.winningOutcomes = [
             [0, 1, 2],
             [3, 4, 5],
@@ -61,7 +52,6 @@ class Grid {
         ];
     }
 
-
     reset() {
         this.movesSoFar = 0;
         this.cells.forEach(cell => cell.reset());
@@ -71,34 +61,36 @@ class Grid {
         this.cells.forEach(cell => cell.makeNotClickable());
     }
 
+    /**
+     * This function checks if a player has won, if a draw has been reached, or if game should continue.
+     * It only compares positions if at least 5 moves have been played.
+     * If a winner is found, it will return an object with the winner's symbol and the winning positions.
+     * If a draw has been reached, it will return an object with the winner property set to draw.
+     * If the game should continue, it will return nothing.
+     */
     compareOutcomes( ) {
-        // function to check the possibilities of win/draw/continue playing
-
         if (this.movesSoFar < 5)
         {
             // no one can win in less than 5 moves
             return;
         }
 
-        // Return winning value if winning outcome met
+        // check if same non-empty value is found in each cell of each combination of winning positions
+        // return winner symbol and winning positions if winner found
         let winningOutcome;
         for (let i = 0; i < this.winningOutcomes.length; i++) {
             winningOutcome = this.winningOutcomes[i];
-            if ( (this.cells[winningOutcome[0]].value !== "") &&
-                (this.hasSameValue(this.cells[winningOutcome[0]], this.cells[winningOutcome[1]], this.cells[winningOutcome[2]]))) {
+            if ((this.cells[winningOutcome[0]].value !== "") &&
+                (this.hasSameValue(this.cells[winningOutcome[0]], this.cells[winningOutcome[1]],
+                    this.cells[winningOutcome[2]]))) {
 
-                return {winner: this.cells[winningOutcome[0]].value, winningPositions: winningOutcome}
-                // return this.cells[winningOutcome[0]].value;
-                // TODO: return object, not string
-                //  {winner: this.cells[winningOutcome[0]].value, winningPositions: winningOutcome}
+                return {winner: this.cells[winningOutcome[0]].value, winningPositions: winningOutcome};
             }
         }
 
-
-
         if (this.movesSoFar === 9) {
             // if checked all combinations and board is full, no one won
-            return {winner: "draw"}
+            return {winner: "draw"};
         }
     }
 
@@ -107,110 +99,124 @@ class Grid {
     }
 }
 
+
+// ----------------------------------------------
+/** TicTacToe implementation **/
+
+// initialize two players
+let playerX = new Player("X");
+let playerO = new Player ("O");
+// PlayerX will always go first
+let currentPlayer = playerX;
+
+// initialize the grid (and grid cells)
 let grid  = new Grid();
-let gridItems = document.getElementsByClassName("grid-item");
 let gameEnded = false;
-// add event listener to each box in the grid
-// when a box inside the grid is clicked:
-// if it is on (i.e. has no value x or o inside of it)
+
+// get html elements to be used on a click of a TicTacToe grid cell
+let gridItems = document.getElementsByClassName("grid-item");
+let message = document.querySelector("h2");
+
+let imageTag = document.createElement("img");
+let main = document.querySelector("main");
+
+// add audio
+let audio = new Audio("Various-01.wav");
+
+// add event listener to each cell in the grid
 for(let i = 0; i < gridItems.length; i++) {
     let htmlCell = gridItems[i];
     let jsCell = grid.cells[i];
     htmlCell.addEventListener("click", (event) => {
-        //event.preventDefault();
-        console.log("button clicked");
-        if(!jsCell.isClickable){
+        // User cannot change value of a cell that already has a value.
+        event.preventDefault();
+        if(!jsCell.isClickable) {
             if (!gameEnded) {
                 alert("Click on non-occupied box.");
             }
         }
         else {
+            // if a non-occupied cell is clicked
+            // occupy the cell with player symbol
             htmlCell.innerText = currentPlayer.symbol;
             jsCell.setValue(currentPlayer.symbol);
             jsCell.makeNotClickable();
 
+            // check to see if game has been won, ended in a draw, or should continue
             grid.movesSoFar += 1;
             let result = grid.compareOutcomes();
-            //
             if(!result) {
+                // if game should continue, players should switch turns
                 switchTurn();
             }
             else {
+                // If game ends, grid cells should not be clickable
+                grid.makeNotClickable();
+                gameEnded = true;
 
-                // win -- X, O, or draw
-                // message display for winner or draw
-                //and rest cells make not clickable and game end;
-                console.log(result.winningPositions)
                 if (result.winner === "draw") {
-                    text.innerText = "It's a draw.";
+                    message.innerText = "It's a draw.";
                 } else {
-                    if(result.winner === "X") {
+                    /**
+                     * If game is won:
+                     * Update score, declare winner
+                     * Show winning positions
+                     * Give reward (random cat -- changes every time someone wins)
+                     * Play an applause sound.
+                     */
+                    if (result.winner === "X") {
                         playerX.score += 1;
                         document.getElementById("px").innerText = `Score: ${playerX.score}`;
                     }
                     else if(result.winner === "O"){
                         playerO.score += 1;
-                        text.innerText = "PlayerO won the game.";
                         document.getElementById("po").innerText = `Score: ${playerO.score}`;
                     }
                     let winningPositions = result.winningPositions;
                     winningPositions.forEach(position => gridItems[position].style.background = "red");
-                    text.innerText = `Player${result.winner} won the game.`;
+                    message.innerText = `Player${result.winner} won the game. Your reward is a cute cat!`;
+                    audio.play();
                     callKitty();
-                };
-                grid.makeNotClickable();
-                gameEnded = true;
+                }
             }
-
         }
-
     });
 }
 
+// function used to change which player is up
 function switchTurn() {
     currentPlayer = (currentPlayer === playerX) ?  playerO :  playerX;
-    text.innerText = `Player${currentPlayer.symbol}, make your move now.`;
+    message.innerText = `Player${currentPlayer.symbol}, make your move now.`;
 }
-//when someone wins kitty will appear on grid
-let imageTag = document.querySelector("#randomCatImage");
+
+// When a player wins, a random kitty will appear on grid (pulled from an API)
+const catRandomEndpoint = 'https://api.thecatapi.com/v1/images/search';
 function callKitty() {
-    const catRandomEndpoint = 'https://api.thecatapi.com/v1/images/search';
-    //const getRandomButton = document.querySelector("#randomButton");
     fetch(catRandomEndpoint)
         .then(response => response.json())
         .then((json => {
             let catUrl = json[0].url;
-            //let imageTag = document.querySelector("#randomCatImage");
+            imageTag.setAttribute("id", "randomCatImage");
             imageTag.setAttribute("src", catUrl);
-
-
+            main.insertBefore(imageTag, main.firstChild);
         }))
-
+     .catch(err => console.log(err));
 }
 
-
+// When reset button is clicked, grid should be cleared, reward should go away
+// Scores will be kept
 let reset = document.querySelector("#reset");
 reset.addEventListener("click", (event) => {
-    console.log("it will reset the grid");
     event.preventDefault();
     grid.reset();
-    imageTag.removeAttribute("src");
+    if(imageTag.parentNode) {
+        main.removeChild(imageTag);
+    }
     for (let i = 0; i < gridItems.length; i++){
         gridItems[i].innerText = "";
         gridItems[i].style.background = "";
     }
-    text.innerText = `Player${currentPlayer.symbol}, make your move now.`;
+    message.innerText = `Player${currentPlayer.symbol}, make your move now.`;
     currentPlayer = playerX;
     gameEnded = false;
 });
-
-
-
-
-
-
-
-
-
-
-
